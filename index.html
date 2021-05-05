@@ -7,13 +7,36 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <!--main css file for the application-->
+    <link rel="stylesheet" href="./css/app.css">
     <title>Nominate a Movie</title>
 </head>
 <body>
     <header>
-        <nav>
-            <h1>This is the Navbar</h1>
-        </nav>
+        <div class='navbar-fixed'>
+            <nav>
+                <div class='nav-wrapper light-blue'>
+                    <a href="#" class='center brand-logo'>Nominate a Movie</a>
+                    <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                    <ul class="right hide-on-med-and-down">
+                        <li>
+                            <a href="#"><i class='material-icons left'>search</i>Search a Movie</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class='material-icons left'>emoji_events</i>Your Movies</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <ul class="sidenav" id="mobile-demo">
+            <li>
+                <a href="#"><i class='material-icons left'>search</i>Search a Movie</a>
+            </li>
+            <li>
+                <a href="#"><i class='material-icons left'>emoji_events</i>Your Movies</a>
+            </li>
+        </ul>
     </header>
     <main>
         <div class="container">
@@ -23,6 +46,18 @@
             <section id="select_movies">
                 <!--This is where the selected movies will be displayed-->
             </section>
+            <!--This is the search bar modal-->
+            <div id="searchBar">
+                <form>
+                    <div class='input-field' style='max-width: 400pt;'>
+                        <input type="search" id='search' required>
+                        <label for="search" class='label-icon'>
+                            <i class=material-icons>search</i>
+                        </label>
+                        <i class='material-icons'>close</i>
+                    </div>
+                </form>
+            </div>
         </div>
     </main>
     <!--JavaScript at end of body for optimized loading-->
