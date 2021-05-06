@@ -1,4 +1,17 @@
-
-.input-field {
-    padding-right: 2rem;
+/* fixing materialize CSS search bar bug */
+#searchBar {
+    margin: -1rem;
+}
+.input-field input[type=search] { 
+    position: relative;
+    height: 64px !important; 
+}
+#closeSearchBtn {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%)
+}
+#search-icon {
+    padding: 1rem;
+    margin-top: 0.3rem;
 }
