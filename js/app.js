@@ -19,7 +19,9 @@ const APP = {
         M.Modal.init(modal, { dismissable: true });
         //listening for the submit on the search bar
         document.searchForm.addEventListener('submit', (ev) => {
-            ev.preventDefault();
+            //activating the page
+            document.querySelector('#nominatedPage').classList.remove('active');
+            document.querySelector('#searchPage').classList.add('active')
             //closing the modal
             let searchModal = M.Modal.getInstance(modal);
             searchModal.close();
@@ -31,6 +33,13 @@ const APP = {
             window.location = `#${query}`;
             //calling the function to get data from the API;
             APP.getData(query);
+        })
+        //listening for click on the my movies list button
+        document.querySelector('.nominated-list').addEventListener('click', (ev) => {
+            //add the class active on the active page and disable from the other page
+            document.querySelector('#searchPage').classList.remove('active');
+            document.querySelector('#nominatedPage').classList.add('active');
+            
         })
     },
     getData: (query) => {
