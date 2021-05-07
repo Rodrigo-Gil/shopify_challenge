@@ -5,6 +5,7 @@ const APP = {
     imgURL: 'http://img.omdbapi.com/?apikey=',
     apiKey: '386d4e69',
     dataSearch: [],
+    selectedMovies: [],
 
     init: () => {
         console.log('App Initialized');
@@ -67,11 +68,11 @@ const APP = {
             .map((card) => {
                 return `<div class="center card hoverable large col s12 m4 l3" data-id="${card.imdbID}">
                 <div class="card-image">
-                    <img src="${card.Poster}" class="responsive-img" alt="movie image"/>
+                    <img src="${card.Poster}" alt="movie image"/>
                 </div>
                 <div class="card-content valign-wrapper>
                     <h4 class="card-title center-align"><span>${card.Title}</span></h4>
-                    <p>${card.Year}</p>
+                    <p>Released: ${card.Year}</p>
                 </div>
                 <div class="card-action">       
                     <a href="#" class="add-movie light-blue-text text-darken-3">Add to my List
@@ -81,6 +82,50 @@ const APP = {
             })
             .join('\n')
             container.append(cardContainer);
+            //adding a listener on the created add button
+            document.querySelectorAll('.card-action').forEach((el) => {
+                el.addEventListener('click', (ev) => {
+                    let card = ev.target.closest('.card');
+                    let selected = card.classList.toggle('selected');
+                    let cardId = card.getAttribute('data-id');
+                    let addMovie = ev.target.closest('.card-action')
+                    .querySelector('.add-movie')
+                    let movie = APP.dataSearch.find((movie) =>
+                                movie.imdbID === cardId
+                            )
+                    //if the button is selected
+                    if (selected == true) {
+                        console.log('the movie has been selected');
+                        if (APP.selectedMovies.length < 5) {
+                            //adding the movie to the array
+                            APP.selectedMovies.push(movie);
+                            console.log(APP.selectedMovies)
+                            //changing the text and icon of the selected movie;
+                            addMovie.childNodes[0].nodeValue = 'Remove';
+                            addMovie.classList.replace('light-blue-text', 'red-text');
+                            addMovie.childNodes[1].innerText = "delete";
+                        } else {
+                            //the list is full, display a message to the user
+                            window.alert('Sorry! Your list is full. Please delete movies to add others');
+                            //remove the selected class from the card
+                            card.classList.remove('selected');
+                        }
+                    } else {
+                        //remove the movie from the list
+                        console.log('remove the movie from the list');
+                        if (APP.selectedMovies.length > 0) {
+                            //removing the movie from the array
+                            let index = APP.selectedMovies.indexOf(movie);
+                            APP.selectedMovies.splice(index, 1);
+                            console.log('this is the new array: ', APP.selectedMovies);
+                            //changing the text and icon of the selected movie;
+                            addMovie.childNodes[0].nodeValue = 'Add Movie';
+                            addMovie.classList.replace('red-text', 'light-blue-text');
+                            addMovie.childNodes[1].innerText = "add";
+                        }
+                    }
+                })
+            })
         } else {
             //no cards to display
             container.innerHTML = `<div class="card hoverable">
