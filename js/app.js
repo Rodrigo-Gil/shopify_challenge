@@ -36,7 +36,7 @@ const APP = {
     getData: (query) => {
         let searchPage = document.querySelector('#searchPage');
         searchPage.innerHTML= "";
-        let url = `${APP.baseURL}${APP.apiKey}&s=${query}`;
+        let url = `${APP.baseURL}${APP.apiKey}&s=${query}&type=movie`;
         //fetching data from the API
         fetch (url)
         .then((resp) => 
