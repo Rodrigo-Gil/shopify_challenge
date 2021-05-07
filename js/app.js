@@ -15,10 +15,10 @@ const APP = {
         let elem = document.querySelector('.sidenav');
         M.Sidenav.init(elem, { dismissable: true });
         //adding the modal trigger listener to the nav button
-        let modal = document.querySelector('.modal');
+        let modal = document.querySelector('#searchModal');
         M.Modal.init(modal, { dismissable: true });
         //listening for the submit on the search bar
-        document.searchForm.addEventListener('submit', (ev) => {
+        document.searchForm.addEventListener('submit', () => {
             //activating the page
             document.querySelector('#nominatedPage').classList.remove('active');
             document.querySelector('#searchPage').classList.add('active')
@@ -35,11 +35,15 @@ const APP = {
             APP.getData(query);
         })
         //listening for click on the my movies list button
-        document.querySelector('.nominated-list').addEventListener('click', (ev) => {
+        document.querySelector('.nominated-list').addEventListener('click', () => {
             //add the class active on the active page and disable from the other page
             document.querySelector('#searchPage').classList.remove('active');
-            document.querySelector('#nominatedPage').classList.add('active');
-            
+            let myMovies = document.querySelector('#nominatedPage')
+            myMovies.classList.add('active');
+            //cleaning the old content on the page
+            myMovies.innerHTML="";
+            //calling the function to handle the elements on the page
+            APP.nominatedPage();
         })
     },
     getData: (query) => {
@@ -56,24 +60,22 @@ const APP = {
             //saving the results on a global variable
             APP.dataSearch = data.Search;
             //calling the function to build the elements on the page
-            APP.buildPage(query);
+            APP.searchPage(query);
         })
     },
-    buildPage: (query) => {
+    searchPage: (query) => {
         let container = document.querySelector('#searchPage');
-        let searchData = APP.dataSearch;
+        let pageText = document.createElement('h4');
+        pageText.classList.add('center');
+        pageText.innerHTML = `Search Results for ${query}`;
+        container.append(pageText);
 
-        if (searchData.length > 0) {
-            //creating the text on top of the page
-            let text = document.createElement('h4');
-            text.classList.add('center')
-            text.innerHTML = `Search Results for ${query}`;
-            container.appendChild(text);
-            //creating the card container
+        //if we have results
+        if (APP.dataSearch.length > 0) {
             let cardContainer = document.createElement('div');
             cardContainer.classList.add('row')
             //mapping over the results and displaying card on the page
-            cardContainer.innerHTML= searchData
+            cardContainer.innerHTML= APP.dataSearch
             .map((card) => {
                 return `<div class="center card hoverable large col s12 m4 l3" data-id="${card.imdbID}">
                 <div class="card-image">
@@ -137,13 +139,69 @@ const APP = {
             })
         } else {
             //no cards to display
-            container.innerHTML = `<div class="card hoverable">
-            <div class="card-content">
+            APP.noCards(container)
+            }
+    },
+    nominatedPage: () => {
+        let container = document.querySelector('#nominatedPage');
+        let pageText = document.createElement('h4');
+        pageText.classList.add('center');
+        pageText.innerHTML = "My Nominated Movies";
+        container.append(pageText);
+        //if we have movies to display
+        if (APP.selectedMovies.length > 0) {
+            let cardContainer = document.createElement('div');
+            cardContainer.classList.add('row')
+            //mapping over the results and displaying card on the page
+            cardContainer.innerHTML= APP.selectedMovies
+            .map((card) => {
+                return `<div class="center card hoverable large col s12 m4 l3" data-id="${card.imdbID} selected">
+                <div class="card-image">
+                    <img src="${card.Poster}" alt="movie image"/>
+                </div>
+                <div class="card-content valign-wrapper>
+                    <h4 class="card-title center-align"><span>${card.Title}</span></h4>
+                    <p>Released: ${card.Year}</p>
+                </div>
+                <div class="card-action">       
+                    <a href="#modalDelete" class="add-movie red-text text-darken-3 modal-trigger">Remove
+                    <i class="material-icons left">delete</i></a>
+                </div>
+                </div>`
+            })
+            .join('\n')
+            container.append(cardContainer);
+            //adding a listener to remove the card from the list
+            document.querySelectorAll('.card-action').forEach((el) => {
+                el.addEventListener('click', (ev) => {
+                    let card = ev.target.closest('.card');
+                    let cardId = card.getAttribute('data-id');
+                    let movie = APP.selectedMovies.find((movie) =>
+                                movie.imdbID === cardId
+                            )
+                    //removing the movie from the array
+                    let index = APP.selectedMovies.indexOf(movie);
+                    APP.selectedMovies.splice(index, 1);
+                    console.log('this is the new array: ', APP.selectedMovies);
+                    //removing the card from the page
+                    window.alert('Your movie was successfully removed from the list')
+                    //updating the page with the new cards
+                    container.innerHTML = "";
+                    APP.nominatedPage();
+                })
+            })
+        } else {
+            //no cards to display
+            APP.noCards(container)
+            }
+    },
+    noCards: (container) => {
+        container.innerHTML = `<div class="center-align card hoverable">
+            <div class="card-content center">
             <h3 class="card-title activator"><span>No Content Available.</span></h3>
             </div>
             </div>
-            <a href="#" class="waves-effect waves-light btn green accent-2" onclick="history.go(-1)">Back to results</a>`
-            }
-        },
-    };
+            <a href="#" class="waves-effect waves-light btn green accent-2" onclick="history.go(-1)">Back</a>`
+    }
+}
 document.addEventListener('DOMContentLoaded', APP.init)
