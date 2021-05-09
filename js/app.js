@@ -104,6 +104,9 @@ const APP = {
                     let movie = APP.dataSearch.find((movie) =>
                                 movie.imdbID === cardId
                             )
+                    //activating the movie badge and counter
+                    let movieBadge = document.querySelector('#labelListCount');
+                    movieBadge.classList.add('new','badge','green');
                     //if the button is selected
                     if (selected == true) {
                         console.log('the movie has been selected');
@@ -111,6 +114,9 @@ const APP = {
                             //adding the movie to the array
                             APP.selectedMovies.push(movie);
                             console.log(APP.selectedMovies)
+                            //setting the attribute counter on the badge
+                            movieBadge.setAttribute('data-badge-caption',
+                            APP.selectedMovies.length);
                             //changing the text and icon of the selected movie;
                             addMovie.childNodes[0].nodeValue = 'Remove';
                             addMovie.classList.replace('light-blue-text', 'red-text');
@@ -129,6 +135,9 @@ const APP = {
                             let index = APP.selectedMovies.indexOf(movie);
                             APP.selectedMovies.splice(index, 1);
                             console.log('this is the new array: ', APP.selectedMovies);
+                            //updating the movieCounter
+                            movieBadge.setAttribute('data-badge-caption',
+                            APP.selectedMovies.length);
                             //changing the text and icon of the selected movie;
                             addMovie.childNodes[0].nodeValue = 'Add Movie';
                             addMovie.classList.replace('red-text', 'light-blue-text');
