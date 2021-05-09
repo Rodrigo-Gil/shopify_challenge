@@ -29,8 +29,8 @@ const APP = {
             sideNav.close();
             let query = document.getElementById('search')
             .value.trim();
-            //adding the query to the URL
-            window.location = `#${query}`;
+            //changing the url
+            window.location = `#${query}`
             //calling the function to get data from the API;
             APP.getData(query);
         })
@@ -56,7 +56,7 @@ const APP = {
             resp.json()
         )
         .then((data) => {
-            console.log('this is the data from the API', data.Search);
+            console.log('this is the data from the API', data);
             //saving the results on a global variable
             APP.dataSearch = data.Search;
             //calling the function to build the elements on the page
@@ -69,27 +69,30 @@ const APP = {
         pageText.classList.add('center');
         pageText.innerHTML = `Search Results for ${query}`;
         container.append(pageText);
-
         //if we have results
-        if (APP.dataSearch.length > 0) {
+        if (APP.dataSearch) {
             let cardContainer = document.createElement('div');
-            cardContainer.classList.add('row')
+            cardContainer.classList.add('row', 'movie-container', 'center')
             //mapping over the results and displaying card on the page
-            cardContainer.innerHTML= APP.dataSearch
+            cardContainer.innerHTML= APP.dataSearch 
             .map((card) => {
-                return `<div class="center card hoverable large col s12 m4 l3" data-id="${card.imdbID}">
-                <div class="card-image">
-                    <img src="${card.Poster}" alt="movie image"/>
-                </div>
-                <div class="card-content valign-wrapper>
-                    <h4 class="card-title center-align"><span>${card.Title}</span></h4>
-                    <p>Released: ${card.Year}</p>
-                </div>
-                <div class="card-action">       
-                    <a href="#" class="add-movie light-blue-text text-darken-3">Add to my List
-                    <i class="material-icons left">add</i></a>
-                </div>
-                </div>`
+                if (card.Poster != "N/A") {
+                        return `<div class= "col s12 m4 l4">
+                        <div class="movie-card center card hoverable large" data-id="${card.imdbID}">
+                    <div class="card-image">
+                        <img src="${card.Poster}" alt="movie image"/>
+                    </div>
+                    <div class="card-content valign-wrapper>
+                        <h4 class="card-title center-align"><span>${card.Title}</span></h4>
+                        <p>Released: ${card.Year}</p>
+                    </div>
+                    <div class="card-action">       
+                        <a href="#" class="add-movie light-blue-text text-darken-3">Add to my List
+                        <i class="material-icons left">add</i></a>
+                    </div>
+                    </div>
+                    </div>`
+                }
             })
             .join('\n')
             container.append(cardContainer);
@@ -164,19 +167,21 @@ const APP = {
             //mapping over the results and displaying card on the page
             cardContainer.innerHTML= APP.selectedMovies
             .map((card) => {
-                return `<div class="center card hoverable large col s12 m4 l3" data-id="${card.imdbID} selected">
-                <div class="card-image">
-                    <img src="${card.Poster}" alt="movie image"/>
-                </div>
-                <div class="card-content valign-wrapper>
-                    <h4 class="card-title center-align"><span>${card.Title}</span></h4>
-                    <p>Released: ${card.Year}</p>
-                </div>
-                <div class="card-action">       
-                    <a href="#modalDelete" class="add-movie red-text text-darken-3 modal-trigger">Remove
-                    <i class="material-icons left">delete</i></a>
-                </div>
-                </div>`
+                return `<div class= "col s12 m4 l3">
+                        <div class="movie-card center card hoverable large" data-id="${card.imdbID}">
+                    <div class="card-image">
+                        <img src="${card.Poster}" alt="movie image"/>
+                    </div>
+                    <div class="card-content valign-wrapper>
+                        <h4 class="card-title center-align"><span>${card.Title}</span></h4>
+                        <p>Released: ${card.Year}</p>
+                    </div>
+                    <div class="card-action">       
+                        <a href="#" class="add-movie red-text text-darken-3">Remove
+                        <i class="material-icons left">delete</i></a>
+                    </div>
+                    </div>
+                    </div>`
             })
             .join('\n')
             container.append(cardContainer);
@@ -191,6 +196,10 @@ const APP = {
                     //removing the movie from the array
                     let index = APP.selectedMovies.indexOf(movie);
                     APP.selectedMovies.splice(index, 1);
+                    //updating the movieCounter
+                    let movieBadge = document.querySelector('#labelListCount');
+                    movieBadge.setAttribute('data-badge-caption',
+                    APP.selectedMovies.length);
                     console.log('this is the new array: ', APP.selectedMovies);
                     //removing the card from the page
                     window.alert('Your movie was successfully removed from the list')
@@ -209,8 +218,7 @@ const APP = {
             <div class="card-content center">
             <h3 class="card-title activator"><span>No Content Available.</span></h3>
             </div>
-            </div>
-            <a href="#" class="waves-effect waves-light btn green accent-2" onclick="history.go(-1)">Back</a>`
+            </div>`
     }
 }
 document.addEventListener('DOMContentLoaded', APP.init)

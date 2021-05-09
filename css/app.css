@@ -28,15 +28,17 @@
     display: block;
 }
 
-/***** movies list counter ******/
+.card-title:first-child {
+    font-weight: bold;
+}
 
-/*#labelListCount {
-    display: inline-block;
-    font-size: 12px;
-    background: #ff0000;
-    color: #fff;
-    margin-left: 1px;
-    padding: 20px 20px 20px 20px;
-    vertical-align: top;
-    border-radius: 50%;
-}*/
+.card img {
+    min-height: 40vh;
+    object-fit: cover;      
+    width: 100vw;
+    position: relative;
+}
+
+.movie-container {
+    padding: 2rem;
+}
